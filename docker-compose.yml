@@ -4,9 +4,9 @@ services:
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: example
-            MYSQL_DATABASE: mydatabase
+            MYSQL_DATABASE: blog
         ports:
-            - "5432:5432"
+            - "5432:3306"
         volumes:
             - ta24bblogdbdata:/var/lib/mysql
 volumes:

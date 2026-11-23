@@ -1,58 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Blog
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel blog project about database structure and how to work with it.
 
-## About Laravel
+## What you need
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Install these programs:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Visual Studio Code](https://code.visualstudio.com/) (Windows 10 or newer)
+- [Git](https://git-scm.com/download/win)
+- PHP 8.3 or newer
+- [Composer](https://getcomposer.org/download/)
+- [Bun](https://bun.sh/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) for the MariaDB database (should be docker-compose.yml too)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Open Git Bash and install VS Code, Git, PHP, Composer, and Docker Desktop with WinGet:
 
 ```bash
-composer require laravel/boost --dev
+winget install --id Microsoft.VisualStudioCode -e
+winget install --id Git.Git -e
+winget install --id PHP.PHP.8.5 -e
+winget install --id Composer.Composer -e
+winget install --id Docker.DockerDesktop -e
+```
+or you can do it by installing them manually in GUI setups.
 
-php artisan boost:install
+Install Bun from Git Bash using its Windows installer:
+
+```bash
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "irm https://bun.sh/install.ps1 | iex"
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Close and reopen Git Bash after installation so it picks up the updated PATH. Start Docker Desktop and wait for it to finish starting.
 
-## Contributing
+## Clone the project
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone https://github.com/milestails777/blog.git
+cd blog
+```
 
-## Code of Conduct
+## Check PHP extensions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Find the `php.ini` file used by your terminal:
 
-## Security Vulnerabilities
+```bash
+php --ini
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Open the file shown as **Loaded Configuration File** in a text editor. Make sure these extensions are enabled. If a line starts with `;`, remove the semicolon:
 
-## License
+```ini
+extension=bcmath
+extension=curl
+extension=fileinfo
+extension=mbstring
+extension=openssl
+extension=pdo_mysql
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Save `php.ini`, restart Git Bash, and check the loaded extensions:
+
+```bash
+php -m
+```
+
+PHP also needs its standard `ctype`, `dom`, `filter`, `hash`, `PDO`, `session`, `tokenizer`, and `xml` features. They are usually enabled by default.
+
+## Install dependencies
+
+From the project folder, install the PHP and frontend packages:
+
+```bash
+composer install
+bun i
+```
+
+## Set up the environment
+
+Create your local environment file and generate the app key:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+The example environment is already set up for the MariaDB database in `docker-compose.yml`.
+
+## Start the database and run migrations
+
+Make sure Docker Desktop is running, then start the database by running this command:
+
+```bash
+docker compose up -d 
+```
+
+Wait for MySQL-MariaDB to finish starting, then create the database tables:
+
+```bash
+php artisan migrate
+```
+
+## Run the project
+
+Start the Laravel and frontend development server:
+
+```bash
+composer run dev
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser. Press `Ctrl+C` in the terminal to stop the development servers.
